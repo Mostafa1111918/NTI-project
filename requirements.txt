@@ -1,0 +1,6 @@
+streamlit>=1.36
+scikit-learn==1.6.1
+pandas
+numpy
+altair
+joblib

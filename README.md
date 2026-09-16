@@ -1,31 +1,27 @@
-﻿# Tech Track Predictor
+# Track Prediction App
 
-Predicts a student's ideal tech track (Back-end, Front-end, Mobile, UI/UX, Data Science, Machine Learning, or Cyber Security) from an 18-question survey, using a machine learning model.
+This Streamlit app loads `final_proj.pkl`, accepts the model's 18 feature values, and shows the predicted class plus the full class-probability distribution.
 
-## Dataset
+## Install
 
-- Source: survey responses, 8,416 rows, 20 columns, 7 target classes.
-- Cleaning: removed 1,032 "random answer" rows (detected via near-50% yes-rate patterns and low prediction accuracy), then removed 5,089 duplicate rows to avoid train/test leakage.
-- Final dataset: 2,295 unique rows.
-- Features: 18 questions, encoded as ordinal (skill level, frequency) or binary (yes/no).
+From the project directory:
 
-## Modeling
-
-- 3 models trained and compared: Logistic Regression, Decision Tree, Random Forest.
-- Evaluated with 5-fold cross-validation and a held-out test set (Accuracy, Precision, Recall, F1).
-- Best model: Random Forest, selected by cross-validation accuracy (98.21% CV, 98.1% test accuracy).
-
-## Files
-
-- `project.ipynb` - data cleaning, encoding, model training and evaluation.
-- `Responses.csv` - raw survey data.
-- `survey_model.pkl`, `label_encoder.pkl`, `feature_names.pkl` - saved trained model artifacts.
-- `app.py` - Streamlit app that collects answers and predicts a track with a confidence score.
-- `requirements.txt` - Python dependencies.
-
-## Running the app
-
+```powershell
+python -m pip install -r requirements.txt
 ```
-pip install -r requirements.txt
+
+## Run
+
+Keep `final_proj.pkl` next to `app.py`, then run:
+
+```powershell
 streamlit run app.py
 ```
+
+The supplied artifact is loaded with `joblib.load`, with a standard pickle fallback. The app validates that it is a scikit-learn pipeline containing a `model` step with fitted feature and class metadata.
+
+## Edit feature_config.json
+
+Replace the 18 placeholder entries with your feature labels, help text, defaults, bounds, and categorical options. Each entry requires `name`, `type`, `default`, `min`, `max`, and `help`. Numeric entries use `min`, `max`, and optional `step`; categorical entries also require a non-empty `options` list.
+
+The current model exposes `feature_names_in_` as `Q1` through `Q18`, so those names and their order are used automatically. The configuration must still contain exactly 18 entries. The first three placeholder controls use numeric categorical options because this model expects the encoded values used during training.
